@@ -1,0 +1,27 @@
+name: Go
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+
+    - name: Build
+      run: make
+
+    - name: Test
+      run: |
+        sudo sysctl -w kernel.unprivileged_bpf_disabled=0
+        make test
